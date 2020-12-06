@@ -1,2 +1,2 @@
-# IceCrystalLabyrinth-Battle
-Battle system - Ice Crystal Labyrinth
+# 빙정의 미궁 전투시스템 클론 프로젝트
+
