@@ -13,18 +13,36 @@ void gotoxy(int x, int y); //커서 위치
 void txtclr(int num); //텍스트 색
 
 #define KEY_ENTER 13
+#define KEY_ESC 27
+#define KEY_UP 72
+#define KEY_DOWN 80
+#define KEY_LEFT 75
+#define KEY_RIGHT 77
 #define KEY_Z 122
 
 //유저 정보 관련
-struct UsrInformation {
+struct UserInformation {
 	char username[30]; //유저이름
 	int user_hp;  //HP
+	int user_max_hp; //최대HP
 	int user_str; //공격
 	int user_vit; //방어
 	int user_dex; //능숙
 	int user_agi; //민첩
 	int user_int; //지력
 }UsrInf;
+
+//몬스터 정보 관련
+struct MonsterInformation {
+	char monstername[20]; //몬스터이름
+	int monster_hp; //몬스터 HP
+	int monster_max_hp; //몬스터 최대HP
+	int monster_str; //몬스터 공격
+	int monster_vit; //몬스터 방어
+	int monster_dex; //몬스터 능숙
+	int monster_agi; //몬스터 민첩
+	int monster_int; //몬스터 지력
+}MonInf;
 
 //전투 시스템 관련
 #define USER 12345 //(숫자는 의미없음)
@@ -46,7 +64,7 @@ struct inBattleValue {
 //함수들
 void UserInfoSetup(); //인트로 및 유저등록
 void BattleTurnStartMessage(int turn_num); //전투시작메세지 및 턴 상태메세지 출력
-void SetCondition(); //유저 컨디션 값 세팅
+void UserSetCondition(); //유저 컨디션 값 세팅
 void UserAct(); //유저의 턴에서 행동할 것 선택
 
 
