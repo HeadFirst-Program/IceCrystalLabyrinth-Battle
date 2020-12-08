@@ -39,29 +39,62 @@ void UserInfoSetup() {
 	switch (difficulty) {
 	case 1:
 		UsrInf.user_hp = 250;
+		UsrInf.user_max_hp = 250;
 		UsrInf.user_str = 64;
 		UsrInf.user_vit = 30;
 		UsrInf.user_dex = 39;
 		UsrInf.user_agi = 34;
 		UsrInf.user_int = 29;
+
+		strcpy(MonInf.monstername, "말랑한 스펀지");
+		MonInf.monster_hp = 100;
+		MonInf.monster_max_hp = 100;
+		MonInf.monster_str = 30;
+		MonInf.monster_vit = 60;
+		MonInf.monster_dex = 30;
+		MonInf.monster_agi = 35;
+		MonInf.monster_int = 30;
+
 		printf("쉬움 난이도 설정이 완료되었습니다.");
 		break;
 	case 2:
 		UsrInf.user_hp = 140;
+		UsrInf.user_max_hp = 140;
 		UsrInf.user_str = 37;
 		UsrInf.user_vit = 36;
 		UsrInf.user_dex = 31;
 		UsrInf.user_agi = 37;
 		UsrInf.user_int = 30;
+
+		strcpy(MonInf.monstername, "보통 스펀지");
+		MonInf.monster_hp = 150;
+		MonInf.monster_max_hp = 150;
+		MonInf.monster_str = 40;
+		MonInf.monster_vit = 40;
+		MonInf.monster_dex = 35;
+		MonInf.monster_agi = 35;
+		MonInf.monster_int = 35;
+
 		printf("보통 난이도 설정이 완료되었습니다.");
 		break;
 	case 3:
 		UsrInf.user_hp = 110;
+		UsrInf.user_max_hp = 110;
 		UsrInf.user_str = 24;
 		UsrInf.user_vit = 22;
 		UsrInf.user_dex = 20;
 		UsrInf.user_agi = 24;
 		UsrInf.user_int = 16;
+
+		strcpy(MonInf.monstername, "딱딱한 스펀지");
+		MonInf.monster_hp = 200;
+		MonInf.monster_max_hp = 200;
+		MonInf.monster_str = 50;
+		MonInf.monster_vit = 50;
+		MonInf.monster_dex = 50;
+		MonInf.monster_agi = 50;
+		MonInf.monster_int = 50;
+
 		printf("어려움 난이도 설정이 완료되었습니다.");
 		break;
 	default:
@@ -71,19 +104,27 @@ void UserInfoSetup() {
 		UsrInf.user_dex = 31;
 		UsrInf.user_agi = 37;
 		UsrInf.user_int = 30;
-		printf("이상한 값이군요.. 그냥 보통난이도로 셋팅할께요.");
+
+		strcpy(MonInf.monstername, "보통 스펀지");
+		MonInf.monster_hp = 150;
+		MonInf.monster_max_hp = 150;
+		MonInf.monster_str = 40;
+		MonInf.monster_vit = 40;
+		MonInf.monster_dex = 35;
+		MonInf.monster_agi = 35;
+		MonInf.monster_int = 35;
+
+		printf("이상한 이름이군요.. 그냥 보통난이도로 셋팅할께요.");
 		printf("\n보통 난이도 설정이 완료되었습니다.");
 		break;
 	}
 }
 
 void BattleTurnStartMessage(int turn_num) {
-	//최초턴일경우 "(적이름)이 나타났다!" "(유저닉) 『간다!』" 출력하기
-	//이후 "(숫자)턴 선공" 이나 "(숫자)턴 후공" 을 출력하기.
 	printf("\n\n\n");
 	if (turn_num == 1) {
 		Sleep(1000);
-		printf("몬스터 출현!");
+		printf("%s 출현!", MonInf.monstername);
 		printf("\n%s:『간다!』", UsrInf.username);
 	}
 
@@ -95,16 +136,16 @@ void BattleTurnStartMessage(int turn_num) {
 	if (turn_first_second_select % 2 == 1) {
 		BattleVal.turn_go_first = USER;
 		BattleVal.turn_go_second = MONSTER;
-		printf("선공---");
+		printf("선공---------------");
 	}
 	else {
 		BattleVal.turn_go_first = MONSTER;
 		BattleVal.turn_go_second = USER;
-		printf("후공---");
+		printf("후공---------------");
 	}
 }
 
-void SetCondition() {
+void UserSetCondition() {
 #define MAX_RAND_NUM 20
 	srand((unsigned int)time(NULL)); //랜덤 seed값 초기화
 	CursorView(0);
@@ -207,7 +248,6 @@ void SetCondition() {
 	case 1:
 		temp_condition -= 1;
 	}
-
 	if (temp_condition < 0) { //만약 Con값 계산도중 Con값이 마이너스(-)라면
 		goto CalcForcedStop;
 	}
@@ -227,7 +267,6 @@ void SetCondition() {
 	case 1:
 		temp_condition -= 1;
 	}
-
 	if (temp_condition < 0) { //만약 Con값 계산도중 Con값이 마이너스(-)라면
 		goto CalcForcedStop;
 	}
@@ -241,18 +280,18 @@ void SetCondition() {
 	case 1:
 		temp_condition -= 7;
 	}
-
 	if (temp_condition < 0) { //만약 Con값 계산도중 Con값이 마이너스(-)라면
 		goto CalcForcedStop;
 	}
 
 	temp_condition += UsrInf.user_dex; //유저의 DEX 스탯의 수만큼 Con값 +
+	//printf(GREEN"+DEX"); 이 에니매이션 표시 부분은 추후 시스템이 다 만들어지면 넣기!
 
 CalcForcedStop:
 	BattleVal.user_con = temp_condition; //유저 Con값 최종 저장
 	if (BattleVal.user_con < 0) { //만약 유저가 Con값이 마이너스(-)라면 유저는 해당 턴 동안 아무것도 할 수 없다.
 		printf("\n%s는 중심을 잃었다!", UsrInf.username);
-		printf("\n%s는 자세를 수복하는 중이다.", UsrInf.username);
+		printf("\n%s는 몸의 자세를 고쳐 세우고 있다.", UsrInf.username);
 		return;
 	}
 	printf("\n지금의 컨디션은 %d이다!", BattleVal.user_con);
@@ -263,17 +302,50 @@ void UserAct() {
 		return;
 	}
 
+	int user_act; //해당턴에 유저가 선택한 행동
+	int key_input1; //유저 키 입력 1
+	int key_input2; //유저 키 입력 2
+
 	printf("\n\n");
 	if (BattleVal.turn_go_first == USER) {
-		printf("Attack");
+		printf("         Attack");
 	}
 	else {
-		printf("Counter");
+		printf("         Counter");
 	}
-	printf("\nMagic");
-	printf("\nGuard");
-	printf("\nAvoid");
-
+	//printf("                      ESC: item(미구현)");
+	printf("\n\n           ↑");
+	printf("\nAvoid   ←    →   Magic");
+	printf("\n           ↓");
+	printf("\n\n          Guard");
 	
-
+	printf("\n\nMy HP: "); printf("%d/%d  ", UsrInf.user_hp, UsrInf.user_max_hp);
+	for (int i = 0; i < (int)UsrInf.user_hp / 5; i++) {
+		printf("■");
+	}
+	printf("\nEnemy: "); printf("%d/%d  ", MonInf.monster_hp, MonInf.monster_max_hp);
+	for (int i = 0; i < (int)MonInf.monster_hp / 5; i++) {
+		printf("■");
+	}
+	
+	key_input1 = _getch();
+	if (key_input1 == KEY_ESC) {
+		//printf("아이템칸으로");
+	}
+	if (_kbhit()) { //방향키를 눌렀을 경우에 한정하여 작동한다
+		key_input2 = _getch();
+		if (key_input2 == KEY_UP) {
+			//printf("위로");
+			//방향키를 계속 누름에 따라 공격옵션을 변하게 하는 코드 추가하기
+		}
+		else if (key_input2 == KEY_DOWN) {
+			//printf("아래로");
+		}
+		else if (key_input2 == KEY_LEFT) {
+			//printf("왼쪽으로");
+		}
+		else if (key_input2 == KEY_RIGHT) {
+			//printf("오른쪽으로");
+		}
+	}
 }
