@@ -10,7 +10,7 @@ int main() {
 	while (1) {
 		turn_num++;
 		BattleTurnStartMessage(turn_num);
-		SetCondition();
+		UserSetCondition();
 		UserAct();
 	}
 }
