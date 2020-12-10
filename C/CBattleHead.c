@@ -45,6 +45,11 @@ void UserInfoSetup() {
 		UsrInf.user_dex = 39;
 		UsrInf.user_agi = 34;
 		UsrInf.user_int = 29;
+		BattleVal.user_attack_count = 0;
+		BattleVal.user_guard_count = 0;
+		BattleVal.user_avoid_count = 0;
+		BattleVal.user_magic_count = 0;
+		BattleVal.user_estrus_count = 0;
 
 		strcpy(MonInf.monstername, "말랑한 스펀지");
 		MonInf.monster_hp = 100;
@@ -65,6 +70,11 @@ void UserInfoSetup() {
 		UsrInf.user_dex = 31;
 		UsrInf.user_agi = 37;
 		UsrInf.user_int = 30;
+		BattleVal.user_attack_count = 0;
+		BattleVal.user_guard_count = 0;
+		BattleVal.user_avoid_count = 0;
+		BattleVal.user_magic_count = 0;
+		BattleVal.user_estrus_count = 0;
 
 		strcpy(MonInf.monstername, "보통 스펀지");
 		MonInf.monster_hp = 150;
@@ -85,6 +95,11 @@ void UserInfoSetup() {
 		UsrInf.user_dex = 20;
 		UsrInf.user_agi = 24;
 		UsrInf.user_int = 16;
+		BattleVal.user_attack_count = 0;
+		BattleVal.user_guard_count = 0;
+		BattleVal.user_avoid_count = 0;
+		BattleVal.user_magic_count = 0;
+		BattleVal.user_estrus_count = 0;
 
 		strcpy(MonInf.monstername, "딱딱한 스펀지");
 		MonInf.monster_hp = 200;
@@ -104,6 +119,11 @@ void UserInfoSetup() {
 		UsrInf.user_dex = 31;
 		UsrInf.user_agi = 37;
 		UsrInf.user_int = 30;
+		BattleVal.user_attack_count = 0;
+		BattleVal.user_guard_count = 0;
+		BattleVal.user_avoid_count = 0;
+		BattleVal.user_magic_count = 0;
+		BattleVal.user_estrus_count = 0;
 
 		strcpy(MonInf.monstername, "보통 스펀지");
 		MonInf.monster_hp = 150;
@@ -298,16 +318,17 @@ CalcForcedStop:
 }
 
 void UserAct() {
-	if (BattleVal.user_con < 0) {
+	if (BattleVal.user_con < 0) { //유저의 Con이 -라 행동불능이라면
 		return;
 	}
 
 	int user_act; //해당턴에 유저가 선택한 행동
 	int key_input1; //유저 키 입력 1
 	int key_input2; //유저 키 입력 2
+	int key_input2_continue; //유저 키 유지 확인
 
 	printf("\n\n");
-	if (BattleVal.turn_go_first == USER) {
+	if (BattleVal.turn_go_first == USER) { //유저가 선공이면
 		printf("         Attack");
 	}
 	else {
@@ -320,14 +341,19 @@ void UserAct() {
 	printf("\n\n          Guard");
 	
 	printf("\n\nMy HP: "); printf("%d/%d  ", UsrInf.user_hp, UsrInf.user_max_hp);
-	for (int i = 0; i < (int)UsrInf.user_hp / 5; i++) {
+	for (int i = 0; i < (int)UsrInf.user_hp / 10; i++) {
 		printf("■");
 	}
 	printf("\nEnemy: "); printf("%d/%d  ", MonInf.monster_hp, MonInf.monster_max_hp);
-	for (int i = 0; i < (int)MonInf.monster_hp / 5; i++) {
+	for (int i = 0; i < (int)MonInf.monster_hp / 10; i++) {
 		printf("■");
 	}
 	
+	BattleVal.user_nowturn_attack_count = 0; //새로운 턴이 왔으므로 초기화
+	BattleVal.user_nowturn_guard_count = 0; //새로운 턴이 왔으므로 초기화
+	BattleVal.user_nowturn_avoid_count = 0; //새로운 턴이 왔으므로 초기화
+	BattleVal.user_nowturn_magic_count = 0; //새로운 턴이 왔으므로 초기화
+	printf("\n\n");
 	key_input1 = _getch();
 	if (key_input1 == KEY_ESC) {
 		//printf("아이템칸으로");
@@ -337,6 +363,37 @@ void UserAct() {
 		if (key_input2 == KEY_UP) {
 			//printf("위로");
 			//방향키를 계속 누름에 따라 공격옵션을 변하게 하는 코드 추가하기
+			//추후 공격에 따른 CON값 보너스 시스템 만들기.(단, 3턴 이상 지나가면 보너스가 없어져야함)
+			if (BattleVal.turn_go_first == USER) { //유저가 선공이면
+				BattleVal.user_nowturn_attack_count++;
+				printf("CON+ ATK"); //공격 1단계
+				Sleep(850);
+				key_input2_continue = 0;
+				if (_kbhit()) {
+					key_input2_continue = _getch(); //사용자가 키를 계속 누르고 있는지 확인
+					key_input2_continue = _getch(); //사용자가 키를 계속 누르고 있는지 확인
+				}
+				if (key_input2_continue == KEY_UP) {
+					BattleVal.user_nowturn_attack_count++;
+					printf("\nCON+ ATK+"); //공격 2단계
+					Sleep(850);
+					key_input2_continue = 0;
+					if (_kbhit()) {
+						key_input2_continue = _getch(); //사용자가 키를 계속 누르고 있는지 확인
+						key_input2_continue = _getch(); //사용자가 키를 계속 누르고 있는지 확인
+					}
+					if (key_input2_continue == KEY_UP && _kbhit()) {
+						BattleVal.user_nowturn_attack_count++;
+						printf("\nCON+ ATK++"); //공격 3단계
+						Sleep(500);
+					}
+				}
+				//UserAttack(BattleVal.user_nowturn_attack_count);
+			}
+			else { //유저가 후공이면
+				//BattleVal.user_nowturn_attack_count++;
+				//UserCounter(BattleVal.user_nowturn_attack_count);
+			}
 		}
 		else if (key_input2 == KEY_DOWN) {
 			//printf("아래로");
@@ -349,3 +406,24 @@ void UserAct() {
 		}
 	}
 }
+/*
+if (is_key_hold == 1) {
+	Sleep(500);
+	while (is_key_hold) {
+		BattleVal.user_nowturn_attack_count++;
+		printf("\nCON+ ATK+"); //공격 2단계
+		_getch();
+		_getch();
+		is_key_hold = _kbhit();
+	}
+	fseek(stdin, 0, SEEK_END); ///////
+	Sleep(1000);
+	is_key_hold = _kbhit();
+	while (is_key_hold) {
+		BattleVal.user_nowturn_attack_count++;
+		printf("\nCON+ ATK++"); //공격 3단계
+		_getch();
+		_getch();
+		is_key_hold = _kbhit();
+	}
+	*/
