@@ -58,7 +58,10 @@ struct inBattleValue {
 	int user_avoid_count; //유저가 지난 3턴동안 회피한 휫수(CON-마다 1씩 감소)
 	int user_magic_count; //유저가 지난 3턴동안 마법공격한 휫수(CON-마다 1씩 감소)
 	int user_estrus_count; //유저의 ♡ 개수
-	//int is_user_can_act; //유저가 어떤 행동을 취할 수 있는지 여부(CON이 -대이면 해당 턴 행동불능)
+	int user_nowturn_attack_count; //유저가 현재 턴에 공격한 휫수(CON+마다 1씩 증가)
+	int user_nowturn_guard_count; //유저가 현재 턴에 방어한 휫수(CON+마다 1씩 증가)
+	int user_nowturn_avoid_count; //유저가 현재 턴에 회피한 휫수(CON-마다 1씩 감소)
+	int user_nowturn_magic_count; //유저가 현재 턴에 마법공격한 휫수(CON-마다 1씩 감소)
 }BattleVal;
 
 //함수들
@@ -66,6 +69,8 @@ void UserInfoSetup(); //인트로 및 유저등록
 void BattleTurnStartMessage(int turn_num); //전투시작메세지 및 턴 상태메세지 출력
 void UserSetCondition(); //유저 컨디션 값 세팅
 void UserAct(); //유저의 턴에서 행동할 것 선택
+void UserAttack(int user_atkcnt); //유저가 Attack(선공)을 선택한 것에 대한 연산
+void UserCounter(int user_atkcnt); //유저가 Counter(후공)을 선택한 것에 대한 연산
 
 
 #endif
