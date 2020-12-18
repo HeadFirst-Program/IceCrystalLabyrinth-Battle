@@ -48,6 +48,12 @@ struct MonsterInformation {
 #define USER 12345 //(숫자는 의미없음)
 #define MONSTER 67890 //(숫자는 의미없음)
 
+#define ATK 1 //ATK
+#define ATK_P 2 //ATK+
+#define ATK_PP 3 //ATK++
+#define GRD 4 //Guard
+#define MAG 5 //Magic
+
 struct inBattleValue {
 	int turn_go_first; //선공
 	int turn_go_second; //후공
@@ -62,6 +68,9 @@ struct inBattleValue {
 	int user_nowturn_guard_count; //유저가 현재 턴에 방어한 휫수(CON+마다 1씩 증가)
 	int user_nowturn_avoid_count; //유저가 현재 턴에 회피한 휫수(CON-마다 1씩 감소)
 	int user_nowturn_magic_count; //유저가 현재 턴에 마법공격한 휫수(CON-마다 1씩 감소)
+
+	int mon_con; //몬스터 Condition
+	int mon_nowturn_state; //몬스터의 현재 턴에 선택한 행동
 }BattleVal;
 
 //함수들
@@ -70,7 +79,9 @@ void BattleTurnStartMessage(int turn_num); //전투시작메세지 및 턴 상태메세지 출�
 void UserSetCondition(); //유저 컨디션 값 세팅
 void UserAct(); //유저의 턴에서 행동할 것 선택
 void UserAttack(int user_atkcnt); //유저가 Attack(선공)을 선택한 것에 대한 연산
-void UserCounter(int user_atkcnt); //유저가 Counter(후공)을 선택한 것에 대한 연산
+void UserCounter(); //유저가 Counter(후공)을 선택한 것에 대한 연산
+void MonsterSetCondition(); //몬스터 컨디션 값 세팅
+void MonsterAct(); //몬스터의 턴에서 행동할 것 선택
 
 
 #endif
