@@ -67,7 +67,7 @@ void UserInfoSetup() {
 		UsrInf.user_max_hp = 140;
 		UsrInf.user_str = 37;
 		UsrInf.user_vit = 36;
-		UsrInf.user_dex = 31;
+		UsrInf.user_dex = 31; //테스트값
 		UsrInf.user_agi = 37;
 		UsrInf.user_int = 30;
 		BattleVal.user_attack_count = 0;
@@ -353,6 +353,11 @@ void UserAct() {
 	BattleVal.user_nowturn_guard_count = 0; //새로운 턴이 왔으므로 초기화
 	BattleVal.user_nowturn_avoid_count = 0; //새로운 턴이 왔으므로 초기화
 	BattleVal.user_nowturn_magic_count = 0; //새로운 턴이 왔으므로 초기화
+	if (BattleVal.turn_go_first == MONSTER) { //몬스터가 선공이면 몬스터가 먼저 행동을 취함
+		printf("\n");
+		MonsterSetCondition();
+		MonsterAct();
+	}
 	printf("\n\n");
 	key_input1 = _getch();
 	if (key_input1 == KEY_ESC) {
@@ -362,8 +367,7 @@ void UserAct() {
 		key_input2 = _getch();
 		if (key_input2 == KEY_UP) {
 			//printf("위로");
-			//방향키를 계속 누름에 따라 공격옵션을 변하게 하는 코드 추가하기
-			//추후 공격에 따른 CON값 보너스 시스템 만들기.(단, 3턴 이상 지나가면 보너스가 없어져야함)
+			//추후 공격에 따른 CON값 보너스 시스템 만들기.(단, 3턴 이상 지나가면 보너스가 없어져야함) //////
 			if (BattleVal.turn_go_first == USER) { //유저가 선공이면
 				BattleVal.user_nowturn_attack_count++;
 				printf("CON+ ATK"); //공격 1단계
@@ -382,17 +386,18 @@ void UserAct() {
 						key_input2_continue = _getch(); //사용자가 키를 계속 누르고 있는지 확인
 						key_input2_continue = _getch(); //사용자가 키를 계속 누르고 있는지 확인
 					}
-					if (key_input2_continue == KEY_UP && _kbhit()) {
+					if (key_input2_continue == KEY_UP) {
 						BattleVal.user_nowturn_attack_count++;
 						printf("\nCON+ ATK++"); //공격 3단계
 						Sleep(500);
 					}
 				}
-				//UserAttack(BattleVal.user_nowturn_attack_count);
+				UserAttack(BattleVal.user_nowturn_attack_count); //유저 공격 데미지 연산
 			}
 			else { //유저가 후공이면
-				//BattleVal.user_nowturn_attack_count++;
-				//UserCounter(BattleVal.user_nowturn_attack_count);
+				BattleVal.user_nowturn_attack_count++;
+				//MonsterAct(); //몬스터가 선공이므로 몬스터가 먼저 행동 
+				UserCounter(); //유저 카운터 데미지 연산
 			}
 		}
 		else if (key_input2 == KEY_DOWN) {
@@ -406,24 +411,153 @@ void UserAct() {
 		}
 	}
 }
-/*
-if (is_key_hold == 1) {
-	Sleep(500);
-	while (is_key_hold) {
-		BattleVal.user_nowturn_attack_count++;
-		printf("\nCON+ ATK+"); //공격 2단계
-		_getch();
-		_getch();
-		is_key_hold = _kbhit();
+
+void UserAttack(int user_atkcnt) {
+	int nowturn_plus_attack_damage = 0;
+
+	switch (user_atkcnt) {
+	case 1: //ATK
+		printf("%s는 공격의 자세에 들어갔다!",UsrInf.username);
+		MonsterSetCondition();
+		//MonsterAct(); 추후 이 함수에 몬스터가 후공일떄의 시스템을 넣기
+		printf("\n\n%s의 공격!", UsrInf.username);
+		if (BattleVal.user_con > BattleVal.mon_con) { //유저가 CON이 더 높다면
+			nowturn_plus_attack_damage = UsrInf.user_str + 10; //(임시 피해량)
+			MonInf.monster_hp -= nowturn_plus_attack_damage;
+			Sleep(500);
+			printf("\nCounter!! %s에 %d의 데미지!", MonInf.monstername, nowturn_plus_attack_damage);
+			Sleep(500);
+		}
+		else { //몬스터가 CON이 더 높다면
+			nowturn_plus_attack_damage = MonInf.monster_str + 10; //(임시 피해량)
+			UsrInf.user_hp -= nowturn_plus_attack_damage;
+			Sleep(500);
+			printf("\n%s에 %d의 데미지!",UsrInf.username, nowturn_plus_attack_damage);
+			Sleep(500);
+		}
+		break;
+	case 2: //ATK+
+		printf("\n\n%s는 혼신의 공격을 밝힌다!", UsrInf.username);
+		MonsterSetCondition();
+		if (BattleVal.user_con > BattleVal.mon_con) { //유저가 CON이 더 높다면
+			nowturn_plus_attack_damage = UsrInf.user_str + 30; //(임시 피해량)
+			MonInf.monster_hp -= nowturn_plus_attack_damage;
+			Sleep(500);
+			printf("\nCounter!! %s에 %d의 데미지!", MonInf.monstername, nowturn_plus_attack_damage);
+			Sleep(500);
+		}
+		else { //몬스터가 CON이 더 높다면
+			nowturn_plus_attack_damage = MonInf.monster_str + 30; //(임시 피해량)
+			UsrInf.user_hp -= nowturn_plus_attack_damage;
+			Sleep(500);
+			printf("\n%s에 %d의 데미지!", UsrInf.username, nowturn_plus_attack_damage);
+			Sleep(500);
+		}
+		break;
+	case 3: //ATK++
+		printf("\n\n%s는 전력의 공격을 내지른다!", UsrInf.username);
+		MonsterSetCondition();
+		if (BattleVal.user_con > BattleVal.mon_con) { //유저가 CON이 더 높다면
+			nowturn_plus_attack_damage = UsrInf.user_str + 50; //(임시 피해량)
+			MonInf.monster_hp -= nowturn_plus_attack_damage;
+			Sleep(500);
+			printf("\nCounter!! %s에 %d의 데미지!", MonInf.monstername, nowturn_plus_attack_damage);
+			Sleep(500);
+		}
+		else { //몬스터가 CON이 더 높다면
+			nowturn_plus_attack_damage = MonInf.monster_str + 50; //(임시 피해량)
+			UsrInf.user_hp -= nowturn_plus_attack_damage;
+			Sleep(500);
+			printf("\n%s에 %d의 데미지!", UsrInf.username, nowturn_plus_attack_damage);
+			Sleep(500);
+		}
+		break;
 	}
-	fseek(stdin, 0, SEEK_END); ///////
-	Sleep(1000);
-	is_key_hold = _kbhit();
-	while (is_key_hold) {
-		BattleVal.user_nowturn_attack_count++;
-		printf("\nCON+ ATK++"); //공격 3단계
-		_getch();
-		_getch();
-		is_key_hold = _kbhit();
+}
+
+void UserCounter() {
+	int nowturn_plus_attack_damage = 0;
+
+	printf("\n\n%s는 틈을 듣고 있다!", UsrInf.username);
+	if (BattleVal.user_con > BattleVal.mon_con) { //유저가 CON이 더 높다면
+		switch (BattleVal.mon_nowturn_state) {
+		case ATK:
+			printf("\n%s의 공격!",MonInf.monstername);
+			nowturn_plus_attack_damage = UsrInf.user_str + 10 + (MonInf.monster_str/5); //(임시 피해량)
+			MonInf.monster_hp -= nowturn_plus_attack_damage;
+			printf("\nCounter!! %s에 %d의 데미지!", MonInf.monstername, nowturn_plus_attack_damage);
+			break;
+		case ATK_P:
+			printf("\n%s는 혼신의 공격을 밝힌다!", MonInf.monstername);
+			nowturn_plus_attack_damage = UsrInf.user_str + 30 + (MonInf.monster_str/3); //(임시 피해량)
+			MonInf.monster_hp -= nowturn_plus_attack_damage;
+			printf("\nCounter!! %s에 %d의 데미지!", MonInf.monstername, nowturn_plus_attack_damage);
+			break;
+		case ATK_PP:
+			printf("\n%s는 전력의 공격을 내지른다!", MonInf.monstername);
+			nowturn_plus_attack_damage = UsrInf.user_str + 50 + (MonInf.monster_str); //(임시 피해량)
+			MonInf.monster_hp -= nowturn_plus_attack_damage;
+			printf("\nCounter!! %s에 %d의 데미지!", MonInf.monstername, nowturn_plus_attack_damage);
+			break;
+		}
 	}
-	*/
+	else { //몬스터가 CON이 더 높다면
+		switch (BattleVal.mon_nowturn_state) {
+		case ATK:
+			printf("\n%s의 공격!", MonInf.monstername);
+			nowturn_plus_attack_damage = MonInf.monster_str + 10; //(임시 피해량)
+			UsrInf.user_hp -= nowturn_plus_attack_damage;
+			printf("\n%s에 %d의 데미지!", UsrInf.username, nowturn_plus_attack_damage);
+			break;
+		case ATK_P:
+			printf("\n%s는 혼신의 공격을 밝힌다!", MonInf.monstername);
+			nowturn_plus_attack_damage = MonInf.monster_str + 30; //(임시 피해량)
+			UsrInf.user_hp -= nowturn_plus_attack_damage;
+			printf("\n%s에 %d의 데미지!", UsrInf.username, nowturn_plus_attack_damage);
+			break;
+		case ATK_PP:
+			printf("\n%s는 전력의 공격을 내지른다!", MonInf.monstername);
+			nowturn_plus_attack_damage = MonInf.monster_str + 50; //(임시 피해량)
+			UsrInf.user_hp -= nowturn_plus_attack_damage;
+			printf("\n%s에 %d의 데미지!", UsrInf.username, nowturn_plus_attack_damage);
+			break;
+		}
+	}
+}
+
+void MonsterSetCondition() {
+	int temp_monster_dex;
+	srand((unsigned int)time(NULL)); //랜덤 seed값 초기화
+
+	BattleVal.mon_con = rand() % 100; //0~99
+	temp_monster_dex = MonInf.monster_dex;
+	BattleVal.mon_con += temp_monster_dex;
+}
+
+void MonsterAct() {
+	int monster_idk_random_act;
+	srand((unsigned int)time(NULL)); //랜덤 seed값 초기화
+
+	monster_idk_random_act = rand() % 3;
+	switch (monster_idk_random_act) {
+	case 0:
+		BattleVal.mon_nowturn_state = ATK;
+		printf("\n%s는 공격의 자세에 들어갔다!", MonInf.monstername);
+		break;
+	case 1:
+		BattleVal.mon_nowturn_state = ATK_P;
+		printf("\n%s는 힘을 모으고 있다!", MonInf.monstername);
+		break;
+	case 2:
+		BattleVal.mon_nowturn_state = ATK_PP;
+		printf("\n%s는 살기를 발하고 있다!", MonInf.monstername);
+		break;
+
+	//추후 추가해야 할 다른 선택지)
+	//%s는 회피의 자세를 취하고 있다.
+	//%s는 방어의 자세를 취하고 있다.
+	
+		//추후 몬스터가 후공일떄의 행동도 넣기
+		//(몬스터는 틈을 듣고 있다!)
+	}
+}
