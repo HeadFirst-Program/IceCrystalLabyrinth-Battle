@@ -392,12 +392,12 @@ void UserAct() {
 						Sleep(500);
 					}
 				}
-				UserAttack(BattleVal.user_nowturn_attack_count); //유저 공격 데미지 연산
+				UserAttack(BattleVal.user_nowturn_attack_count); //유저 공격 데미지 연산(유저가 선공일시)
 			}
 			else { //유저가 후공이면
 				BattleVal.user_nowturn_attack_count++;
 				//MonsterAct(); //몬스터가 선공이므로 몬스터가 먼저 행동 
-				UserCounter(); //유저 카운터 데미지 연산
+				UserCounter(); //유저 카운터 데미지 연산(유저가 후공일시)
 			}
 		}
 		else if (key_input2 == KEY_DOWN) {
@@ -425,14 +425,14 @@ void UserAttack(int user_atkcnt) {
 			nowturn_plus_attack_damage = UsrInf.user_str + 10; //(임시 피해량)
 			MonInf.monster_hp -= nowturn_plus_attack_damage;
 			Sleep(500);
-			printf("\nCounter!! %s에 %d의 데미지!", MonInf.monstername, nowturn_plus_attack_damage);
+			printf("\n%s에 %d의 데미지!", MonInf.monstername, nowturn_plus_attack_damage);
 			Sleep(500);
 		}
 		else { //몬스터가 CON이 더 높다면
 			nowturn_plus_attack_damage = MonInf.monster_str + 10; //(임시 피해량)
 			UsrInf.user_hp -= nowturn_plus_attack_damage;
 			Sleep(500);
-			printf("\n%s에 %d의 데미지!",UsrInf.username, nowturn_plus_attack_damage);
+			printf("\nCounter!! %s에 %d의 데미지!",UsrInf.username, nowturn_plus_attack_damage);
 			Sleep(500);
 		}
 		break;
@@ -443,14 +443,14 @@ void UserAttack(int user_atkcnt) {
 			nowturn_plus_attack_damage = UsrInf.user_str + 30; //(임시 피해량)
 			MonInf.monster_hp -= nowturn_plus_attack_damage;
 			Sleep(500);
-			printf("\nCounter!! %s에 %d의 데미지!", MonInf.monstername, nowturn_plus_attack_damage);
+			printf("\n%s에 %d의 데미지!", MonInf.monstername, nowturn_plus_attack_damage);
 			Sleep(500);
 		}
 		else { //몬스터가 CON이 더 높다면
 			nowturn_plus_attack_damage = MonInf.monster_str + 30; //(임시 피해량)
 			UsrInf.user_hp -= nowturn_plus_attack_damage;
 			Sleep(500);
-			printf("\n%s에 %d의 데미지!", UsrInf.username, nowturn_plus_attack_damage);
+			printf("\nCounter!! %s에 %d의 데미지!", UsrInf.username, nowturn_plus_attack_damage);
 			Sleep(500);
 		}
 		break;
@@ -461,14 +461,14 @@ void UserAttack(int user_atkcnt) {
 			nowturn_plus_attack_damage = UsrInf.user_str + 50; //(임시 피해량)
 			MonInf.monster_hp -= nowturn_plus_attack_damage;
 			Sleep(500);
-			printf("\nCounter!! %s에 %d의 데미지!", MonInf.monstername, nowturn_plus_attack_damage);
+			printf("\n%s에 %d의 데미지!", MonInf.monstername, nowturn_plus_attack_damage);
 			Sleep(500);
 		}
 		else { //몬스터가 CON이 더 높다면
 			nowturn_plus_attack_damage = MonInf.monster_str + 50; //(임시 피해량)
 			UsrInf.user_hp -= nowturn_plus_attack_damage;
 			Sleep(500);
-			printf("\n%s에 %d의 데미지!", UsrInf.username, nowturn_plus_attack_damage);
+			printf("\nCounter!! %s에 %d의 데미지!", UsrInf.username, nowturn_plus_attack_damage);
 			Sleep(500);
 		}
 		break;
