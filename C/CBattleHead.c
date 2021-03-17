@@ -14,6 +14,15 @@ void CursorView(char show)
 
 	SetConsoleCursorInfo(hConsole, &ConsoleCursor);
 }
+void GetCursorPos(int* x, int* y) {
+	CONSOLE_SCREEN_BUFFER_INFO curInfo;
+
+	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &curInfo);
+	//printf("[%d, %d] \n", curInfo.dwCursorPosition.X, curInfo.dwCursorPosition.Y);
+
+	*x = curInfo.dwCursorPosition.X;
+	*y = curInfo.dwCursorPosition.Y;
+}
 
 void gotoxy(int x, int y) {
 	COORD pos = { x, y };
@@ -218,55 +227,94 @@ void UserSetCondition() {
 	switch (BattleVal.user_attack_count) { //유저의 Attack 휫수에 따른 Con값 +
 	case 9:
 		temp_condition += 9;
-		//printf(GREEN"+9"); 이 에니매이션 표시 부분은 추후 Attack 시스템이 다 만들어지면 넣기!
+		txtclr(LIGHT_GREEN); printf(" +9"); Sleep(300);
+		txtclr(WHITE);
 	case 8:
 		temp_condition += 8;
+		txtclr(LIGHT_GREEN); printf(" +8"); Sleep(300);
+		txtclr(WHITE);
 	case 7:
 		temp_condition += 7;
+		txtclr(LIGHT_GREEN); printf(" +7"); Sleep(300);
+		txtclr(WHITE);
 	case 6:
 		temp_condition += 6;
+		txtclr(LIGHT_GREEN); printf(" +6"); Sleep(300);
+		txtclr(WHITE);
 	case 5:
 		temp_condition += 5;
+		txtclr(LIGHT_GREEN); printf(" +5"); Sleep(300);
+		txtclr(WHITE);
 	case 4:
 		temp_condition += 4;
+		txtclr(LIGHT_GREEN); printf(" +4"); Sleep(300);
+		txtclr(WHITE);
 	case 3:
 		temp_condition += 3;
+		txtclr(LIGHT_GREEN); printf(" +3"); Sleep(300);
+		txtclr(WHITE);
 	case 2:
 		temp_condition += 2;
+		txtclr(LIGHT_GREEN); printf(" +2"); Sleep(300);
+		txtclr(WHITE);
 	case 1:
 		temp_condition += 1;
+		txtclr(LIGHT_GREEN); printf(" +1"); Sleep(300);
+		txtclr(WHITE);
 	}
 
 	switch (BattleVal.user_guard_count) { //유저의 Guard 휫수에 따른 Con값 +
 	case 9:
 		temp_condition += 9;
-		//printf(GREEN"+9"); 이 에니매이션 표시 부분은 추후 Defence 시스템이 다 만들어지면 넣기!
+		txtclr(LIGHT_GREEN); printf(" +9"); Sleep(300);
+		txtclr(WHITE);
 	case 8:
 		temp_condition += 8;
+		txtclr(LIGHT_GREEN); printf(" +8"); Sleep(300);
+		txtclr(WHITE);
 	case 7:
 		temp_condition += 7;
+		txtclr(LIGHT_GREEN); printf(" +7"); Sleep(300);
+		txtclr(WHITE);
 	case 6:
 		temp_condition += 6;
+		txtclr(LIGHT_GREEN); printf(" +6"); Sleep(300);
+		txtclr(WHITE);
 	case 5:
 		temp_condition += 5;
+		txtclr(LIGHT_GREEN); printf(" +5"); Sleep(300);
+		txtclr(WHITE);
 	case 4:
 		temp_condition += 4;
+		txtclr(LIGHT_GREEN); printf(" +4"); Sleep(300);
+		txtclr(WHITE);
 	case 3:
 		temp_condition += 3;
+		txtclr(LIGHT_GREEN); printf(" +3"); Sleep(300);
+		txtclr(WHITE);
 	case 2:
 		temp_condition += 2;
+		txtclr(LIGHT_GREEN); printf(" +2"); Sleep(300);
+		txtclr(WHITE);
 	case 1:
 		temp_condition += 1;
+		txtclr(LIGHT_GREEN); printf(" +1"); Sleep(300);
+		txtclr(WHITE);
 	}
 
 	switch (BattleVal.user_avoid_count) { //유저의 Avoid 휫수에 따른 Con값 -
 	case 3:
 		temp_condition -= 3;
-		//printf(RED"-3"); 이 에니매이션 표시 부분은 추후 시스템이 다 만들어지면 넣기!
+		txtclr(LIGHT_RED); printf(" -3"); Sleep(300);
+		txtclr(WHITE);
 	case 2:
 		temp_condition -= 2;
+		txtclr(LIGHT_RED); printf(" -2"); Sleep(300);
+		txtclr(WHITE);
 	case 1:
 		temp_condition -= 1;
+		txtclr(LIGHT_RED); printf(" -1"); Sleep(300);
+		txtclr(WHITE);
 	}
 	if (temp_condition < 0) { //만약 Con값 계산도중 Con값이 마이너스(-)라면
 		goto CalcForcedStop;
@@ -275,17 +323,28 @@ void UserSetCondition() {
 	switch (BattleVal.user_magic_count) { //유저의 Magic 휫수에 따른 Con값 -
 	case 6:
 		temp_condition -= 6;
-		//printf(RED"-6"); 이 에니매이션 표시 부분은 추후 시스템이 다 만들어지면 넣기!
+		txtclr(LIGHT_RED); printf(" -6"); Sleep(300);
+		txtclr(WHITE);
 	case 5:
 		temp_condition -= 5;
+		txtclr(LIGHT_RED); printf(" -5"); Sleep(300);
+		txtclr(WHITE);
 	case 4:
 		temp_condition -= 4;
+		txtclr(LIGHT_RED); printf(" -4"); Sleep(300);
+		txtclr(WHITE);
 	case 3:
 		temp_condition -= 3;
+		txtclr(LIGHT_RED); printf(" -3"); Sleep(300);
+		txtclr(WHITE);
 	case 2:
 		temp_condition -= 2;
+		txtclr(LIGHT_RED); printf(" -2"); Sleep(300);
+		txtclr(WHITE);
 	case 1:
 		temp_condition -= 1;
+		txtclr(LIGHT_RED); printf(" -1"); Sleep(300);
+		txtclr(WHITE);
 	}
 	if (temp_condition < 0) { //만약 Con값 계산도중 Con값이 마이너스(-)라면
 		goto CalcForcedStop;
@@ -294,18 +353,32 @@ void UserSetCondition() {
 	switch (BattleVal.user_estrus_count) { //유저의 ♡ 개수에 따른 Con값 -
 	case 3:
 		temp_condition -= 19;
-		//printf(RED"-19"); 이 에니매이션 표시 부분은 추후 시스템이 다 만들어지면 넣기!
+		txtclr(LIGHT_RED); printf(" -19"); Sleep(300);
+		txtclr(WHITE);
 	case 2:
 		temp_condition -= 13;
+		txtclr(LIGHT_RED); printf(" -13"); Sleep(300);
+		txtclr(WHITE);
 	case 1:
 		temp_condition -= 7;
+		txtclr(LIGHT_RED); printf(" -7"); Sleep(300);
+		txtclr(WHITE);
 	}
 	if (temp_condition < 0) { //만약 Con값 계산도중 Con값이 마이너스(-)라면
 		goto CalcForcedStop;
 	}
 
 	temp_condition += UsrInf.user_dex; //유저의 DEX 스탯의 수만큼 Con값 +
-	//printf(GREEN"+DEX"); 이 에니매이션 표시 부분은 추후 시스템이 다 만들어지면 넣기!
+	int now_X, now_Y;
+	int* ptr_now_X = &now_X;
+	int* ptr_now_Y = &now_Y;
+	//GetCursorPos(ptr_now_X, ptr_now_Y);
+	//printf("%d %d", now_X, now_Y);
+	//CursorView(1);
+	//printf("aa");
+
+	//txtclr(LIGHT_GREEN); printf(" +%d",UsrInf.user_dex); Sleep(300);
+	//txtclr(WHITE);
 
 CalcForcedStop:
 	BattleVal.user_con = temp_condition; //유저 Con값 최종 저장
@@ -417,7 +490,7 @@ void UserAttack(int user_atkcnt) {
 
 	switch (user_atkcnt) {
 	case 1: //ATK
-		printf("%s는 공격의 자세에 들어갔다!",UsrInf.username);
+		printf("\n\n%s는 공격의 자세에 들어갔다!",UsrInf.username);
 		MonsterSetCondition();
 		//MonsterAct(); 추후 이 함수에 몬스터가 후공일떄의 시스템을 넣기
 		printf("\n\n%s의 공격!", UsrInf.username);
