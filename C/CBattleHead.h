@@ -9,6 +9,7 @@
 
 //CUI 관련
 void CursorView(char show); //커서 켜기/끄기
+void GetCursorPos(int* x, int* y); //현재 커서 위치
 void gotoxy(int x, int y); //커서 위치
 void txtclr(int num); //텍스트 색
 
@@ -19,6 +20,23 @@ void txtclr(int num); //텍스트 색
 #define KEY_LEFT 75
 #define KEY_RIGHT 77
 #define KEY_Z 122
+
+#define BLACK 0
+#define BLUE 1
+#define GREEN 2
+#define EMERALD 3
+#define RED 4
+#define PURPLE 5
+#define YELLOW 6
+#define WHITE 7
+#define GRAY 8
+#define LIGHT_BLUE 9
+#define LIGHT_GREEN 10
+#define LIGHT_EMERALD 11
+#define LIGHT_RED 12
+#define LIGHT_PURPLE 13
+#define LIGHT_YELLOW 14
+#define DARK_WHITE 15
 
 //유저 정보 관련
 struct UserInformation {
